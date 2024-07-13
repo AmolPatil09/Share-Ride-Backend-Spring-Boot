@@ -6,25 +6,24 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import com.shareRide.shareRide.dto.UserDTO;
+
+import com.shareRide.shareRide.dto.LoginRequst;
 import com.shareRide.shareRide.exception.RegistartionExceptipon;
-import com.shareRide.shareRide.service.RegistrationService;
-import jakarta.validation.Valid;
+import com.shareRide.shareRide.service.LoginService;
 
 
 @RestController
-public class RegistrationController {
+public class LoginConroller {
 	
+	 @Autowired
+	 private LoginService login;
 	
-	@Autowired
-    private RegistrationService registerService;
-
-	@PostMapping("/register")
-	public ResponseEntity<String> registerPatient(@RequestBody  @Valid UserDTO user)throws RegistartionExceptipon
+	@PostMapping("/login")
+	public ResponseEntity<String> registerPatient(@RequestBody LoginRequst loginReq)throws RegistartionExceptipon
 	
 	{	
-		return new ResponseEntity<String>(registerService.register(user),HttpStatus.ACCEPTED);
+    return new ResponseEntity<String>(login.login(loginReq),HttpStatus.ACCEPTED);
 		
 	}
-	
+
 }
