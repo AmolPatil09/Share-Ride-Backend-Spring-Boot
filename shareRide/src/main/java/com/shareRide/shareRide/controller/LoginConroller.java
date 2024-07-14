@@ -13,6 +13,9 @@ import com.shareRide.shareRide.dto.LoginRequst;
 import com.shareRide.shareRide.exception.RegistartionExceptipon;
 import com.shareRide.shareRide.service.LoginService;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
+
 
 @RestController
 public class LoginConroller {
@@ -26,9 +29,16 @@ public class LoginConroller {
 	 }
 	
 	@PostMapping("/login")
-	public ResponseEntity<JwtResponse> registerPatient(@RequestBody LoginRequst loginReq)throws RegistartionExceptipon{
-    System.out.println("Hi");
-    return new ResponseEntity<JwtResponse>(login.login(loginReq),HttpStatus.ACCEPTED);
+	public ResponseEntity<JwtResponse> registerPatient(@RequestBody LoginRequst loginReq, HttpServletResponse response)throws RegistartionExceptipon{
+		JwtResponse res=login.login(loginReq);
+		Cookie cookie = new Cookie("jwt-token", res.getJwtToken());
+	        cookie.setHttpOnly(true); 
+	        cookie.setSecure(true); 
+	        cookie.setPath("/");
+	        cookie.setMaxAge(5 * 60 * 60 * 1000); 		        
+	        response.addCookie(cookie);
+		return new ResponseEntity<JwtResponse>(res,HttpStatus.ACCEPTED);
+    
 	}
 
 }
